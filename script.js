@@ -1,9 +1,13 @@
 /**
  * PORTFOLIO WEBSITE INTERACTIVE LOGIC - UTSAVKUMAR PARMAR
- * Handles scroll animations, progress bars, stats counters, lightbox modals, and form processing.
+ * Handles scroll animations, progress bars, stats counters, lightbox modals,
+ * HTML5 Canvas particles, copy-to-clipboard, scroll indicator, back-to-top progress ring, and 3D tilt.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ==========================================================================
        1. MOBILE NAVIGATION MENU
@@ -15,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileToggle && navMenu) {
         mobileToggle.addEventListener('click', () => {
             navMenu.classList.toggle('active');
-            // Toggle hamburger icon between bars and xmark
             const icon = mobileToggle.querySelector('i');
             if (icon.classList.contains('fa-bars')) {
                 icon.classList.remove('fa-bars');
@@ -30,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close menu when clicking nav links
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
+            if (navMenu && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 const icon = mobileToggle.querySelector('i');
                 icon.classList.remove('fa-xmark');
@@ -44,10 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     const header = document.querySelector('.header');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         }
     });
 
@@ -69,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, {
-        rootMargin: '-30% 0px -60% 0px' // highlights section when it occupies the center area of the screen
+        rootMargin: '-30% 0px -60% 0px'
     });
 
     sections.forEach(section => {
@@ -90,16 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (skillsSection) {
-        const skillsObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    fillBars();
-                    observer.unobserve(entry.target); // only animate once
-                }
-            });
-        }, { threshold: 0.15 });
+        if (prefersReducedMotion) {
+            fillBars();
+        } else {
+            const skillsObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        fillBars();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
 
-        skillsObserver.observe(skillsSection);
+            skillsObserver.observe(skillsSection);
+        }
     }
 
     /* ==========================================================================
@@ -118,10 +127,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const updateCount = () => {
                 current += increment;
                 if (current < target) {
-                    num.innerText = Math.floor(current) + "+";
+                    num.innerText = Math.floor(current) + (num.innerText.includes('%') || target === 100 || target === 15 || target === 30 || target === 95 || target === 10 ? '%' : '+');
+                    if (target === 100 || target === 15 || target === 30 || target === 95 || target === 10) {
+                        num.innerText = Math.floor(current) + "%";
+                    } else if (target === 3900) {
+                        num.innerText = Math.floor(current).toLocaleString() + "+";
+                    } else {
+                        num.innerText = Math.floor(current) + "+";
+                    }
                     requestAnimationFrame(updateCount);
                 } else {
-                    num.innerText = target + "+";
+                    if (target === 100 || target === 15 || target === 30 || target === 95 || target === 10) {
+                        num.innerText = target + "%";
+                    } else if (target === 3900) {
+                        num.innerText = "3,900+";
+                    } else {
+                        num.innerText = target + "+";
+                    }
                 }
             };
             updateCount();
@@ -129,16 +151,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (achievementsSection) {
-        const achievementsObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    observer.unobserve(entry.target); // only animate once
+        if (prefersReducedMotion) {
+            statNums.forEach(num => {
+                const target = num.getAttribute('data-val');
+                if (target === "3900") {
+                    num.innerText = "3,900+";
+                } else if (target === "100" || target === "15" || target === "30" || target === "95" || target === "10") {
+                    num.innerText = target + "%";
+                } else {
+                    num.innerText = target + "+";
                 }
             });
-        }, { threshold: 0.15 });
+        } else {
+            const achievementsObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
 
-        achievementsObserver.observe(achievementsSection);
+            achievementsObserver.observe(achievementsSection);
+        }
     }
 
     /* ==========================================================================
@@ -168,20 +203,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 const alt = trigger.alt || trigger.innerText || "Document View";
                 
                 lightboxImg.src = src;
-                lightboxCaption.innerText = alt.replace("View Certificate", "").replace("View Recommendation", "").replace("View Recognition", "").trim();
+                lightboxCaption.innerText = alt
+                    .replace("View Certificate", "")
+                    .replace("View Recommendation", "")
+                    .replace("View Recognition", "")
+                    .replace("Zoom Simulation Document", "")
+                    .replace("Zoom Document", "")
+                    .trim();
                 lightbox.style.display = 'block';
                 document.body.style.overflow = 'hidden'; // lock background scrolling
             });
         });
 
-        // Close functions
         const closeLightbox = () => {
             lightbox.style.display = 'none';
             document.body.style.overflow = ''; // unlock background scrolling
             lightboxImg.src = '';
         };
 
-        lightboxClose.addEventListener('click', closeLightbox);
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', closeLightbox);
+        }
         lightbox.addEventListener('click', (e) => {
             if (e.target !== lightboxImg && e.target !== lightboxCaption) {
                 closeLightbox();
@@ -224,8 +266,225 @@ document.addEventListener('DOMContentLoaded', () => {
                 `Best regards,\n${name}`
             );
             
-            // Redirect using mailto
             window.location.href = `mailto:${emailRecipient}?subject=${emailSubject}&body=${emailBody}`;
+        });
+    }
+
+    /* ==========================================================================
+       9. HTML5 CANVAS SUPPLY CHAIN PARTICLE BACKDROP
+       ========================================================================== */
+    const canvas = document.getElementById('hero-canvas');
+    if (canvas && !prefersReducedMotion) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const maxParticles = 60;
+        const connectionDist = 120;
+
+        const resizeCanvas = () => {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.35;
+                this.vy = (Math.random() - 0.5) * 0.35;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce check
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        const animateParticles = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw connections first
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDist) {
+                        const alpha = (1 - dist / connectionDist) * 0.12;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw and update particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animateParticles);
+        };
+
+        animateParticles();
+    }
+
+    /* ==========================================================================
+       10. SCROLL PROGRESS INDICATOR (TOP)
+       ========================================================================== */
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    
+    /* ==========================================================================
+       11. BACK-TO-TOP BUTTON WITH SCROLL PROGRESS RING
+       ========================================================================== */
+    const backToTop = document.getElementById('back-to-top');
+    const progressCircle = document.querySelector('.progress-ring-circle');
+    const ringRadius = 20;
+    const ringCircumference = 2 * Math.PI * ringRadius;
+
+    if (progressCircle) {
+        progressCircle.style.strokeDasharray = ringCircumference;
+        progressCircle.style.strokeDashoffset = ringCircumference;
+    }
+
+    const updateScrollMetrics = () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+
+        // Top progress bar update
+        if (scrollIndicator) {
+            scrollIndicator.style.width = scrolled + '%';
+        }
+
+        // Back to top indicator update
+        if (backToTop) {
+            if (winScroll > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        }
+
+        if (progressCircle) {
+            const offset = ringCircumference - (scrolled / 100) * ringCircumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+    };
+
+    window.addEventListener('scroll', updateScrollMetrics);
+
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    /* ==========================================================================
+       12. SCROLL REVEAL ANIMATIONS (INTERSECTION OBSERVER)
+       ========================================================================== */
+    const animElements = document.querySelectorAll('.animate-scroll, .animate-scroll-left, .animate-scroll-right');
+    
+    if (prefersReducedMotion) {
+        animElements.forEach(el => el.classList.add('active'));
+    } else {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // trigger animation only once
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px' // trigger slightly before entering viewport fully
+        });
+
+        animElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+    }
+
+    /* ==========================================================================
+       13. LIGHTWEIGHT 3D TILT EFFECT FOR PREMIUM CARDS
+       ========================================================================== */
+    const tiltElements = document.querySelectorAll('.ach-card, .outcome-card, .project-overview-card');
+
+    if (!prefersReducedMotion && window.innerWidth > 992) {
+        tiltElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left; // x coordinate inside element
+                const y = e.clientY - rect.top;  // y coordinate inside element
+                
+                const width = rect.width;
+                const height = rect.height;
+                
+                const rotateX = ((y / height) - 0.5) * -10; // Max tilt 5 degrees on X
+                const rotateY = ((x / width) - 0.5) * 10;   // Max tilt 5 degrees on Y
+                
+                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
+    }
+
+    /* ==========================================================================
+       14. COPY EMAIL ADDRESS TO CLIPBOARD
+       ========================================================================== */
+    const copyEmailBtn = document.getElementById('copy-email-btn');
+    const emailLink = document.getElementById('email-address');
+    const copyTooltip = document.getElementById('copy-tooltip');
+
+    if (copyEmailBtn && emailLink && copyTooltip) {
+        copyEmailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const emailAddress = emailLink.innerText.trim();
+            
+            navigator.clipboard.writeText(emailAddress).then(() => {
+                copyTooltip.innerText = "Copied!";
+                copyEmailBtn.querySelector('i').className = "fa-solid fa-check";
+                
+                setTimeout(() => {
+                    copyTooltip.innerText = "Copy";
+                    copyEmailBtn.querySelector('i').className = "fa-regular fa-copy";
+                }, 2000);
+            }).catch(err => {
+                console.error("Could not copy text: ", err);
+            });
         });
     }
 });
