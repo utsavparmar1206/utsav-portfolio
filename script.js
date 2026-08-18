@@ -1,3 +1,5 @@
+document.querySelector('.kicker')?.remove();
+
 const intro = document.getElementById('introScreen');
 window.addEventListener('load', () => setTimeout(() => intro?.classList.add('hide'), 1500));
 
