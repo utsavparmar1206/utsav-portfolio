@@ -3,32 +3,6 @@ document.body.classList.add('enhanced');
 
 document.querySelector('.kicker')?.remove();
 
-// Load the high-resolution 4096px portfolio portrait. The existing profile.jpg
-// remains as a safe fallback until every image chunk has loaded successfully.
-const heroImage = document.querySelector('.portrait-frame img');
-if (heroImage) {
-  const profileParts = [
-    '00.txt', '01.txt', '02.txt', '03.txt', '04.txt',
-    '05_06.txt', '07_08.txt', '09_10.txt', '11_12.txt',
-    '13_14.txt', '15_16.txt', '17.txt'
-  ];
-
-  Promise.all(
-    profileParts.map(name =>
-      fetch(`assets/profile4k-avif-20260818/${name}?v=20260818-1822`, { cache: 'no-store' })
-        .then(response => {
-          if (!response.ok) throw new Error(`Profile image chunk failed: ${name}`);
-          return response.text();
-        })
-    )
-  ).then(parts => {
-    heroImage.src = `data:image/avif;base64,${parts.join('')}`;
-    heroImage.alt = 'Professional portrait of Utsav Parmar';
-  }).catch(() => {
-    // Keep assets/profile.jpg if the high-resolution image cannot load.
-  });
-}
-
 const toggle = document.querySelector('.nav-toggle');
 const links = document.querySelector('.nav-links');
 
