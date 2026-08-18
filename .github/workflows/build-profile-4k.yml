@@ -1,0 +1,61 @@
+name: Build 4K portfolio portrait
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-profile-4k.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out portfolio
+        uses: actions/checkout@v4
+
+      - name: Rebuild high-resolution portrait
+        shell: bash
+        run: |
+          cat \
+            assets/profile4k-avif-20260818/00.txt \
+            assets/profile4k-avif-20260818/01.txt \
+            assets/profile4k-avif-20260818/02.txt \
+            assets/profile4k-avif-20260818/03.txt \
+            assets/profile4k-avif-20260818/04.txt \
+            assets/profile4k-avif-20260818/05_06.txt \
+            assets/profile4k-avif-20260818/07_08.txt \
+            assets/profile4k-avif-20260818/09_10.txt \
+            assets/profile4k-avif-20260818/11_12.txt \
+            assets/profile4k-avif-20260818/13_14.txt \
+            assets/profile4k-avif-20260818/15_16.txt \
+            assets/profile4k-avif-20260818/17.txt \
+            | tr -d '\n\r ' | base64 --decode > assets/profile-4k.avif
+          test "$(wc -c < assets/profile-4k.avif)" -eq 39401
+          echo "b6081486fb1c22a2cdff9a617f536b60d47ade335c4d28dfa37651f53c9c47bf  assets/profile-4k.avif" | sha256sum -c -
+
+      - name: Point portfolio to new portrait
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text()
+          text = text.replace('assets/profile.jpg', 'assets/profile-4k.avif?v=20260818-4k')
+          text = text.replace('<script src="script.js"></script>', '<script src="script.js?v=20260818-4k"></script>')
+          path.write_text(text)
+
+      - name: Commit live portrait
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/profile-4k.avif index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Publish high-resolution portfolio portrait"
+          git push
