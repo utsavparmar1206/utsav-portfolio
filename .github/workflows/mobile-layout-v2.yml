@@ -1,0 +1,90 @@
+name: Force mobile hero layout v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/mobile-layout-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add definitive mobile CSS
+        shell: bash
+        run: |
+          cat >> styles.css <<'EOF'
+
+/* MOBILE HERO FIX V2 - 2026-08-19 */
+@media (max-width: 620px) {
+  .hero { padding-top: 30px !important; overflow: hidden !important; }
+  .hero-grid { gap: 28px !important; }
+  .hero-portrait { width: 100% !important; margin-top: 0 !important; padding: 0 0 92px !important; }
+  .portrait-stage {
+    width: min(94vw, 430px) !important;
+    max-width: 430px !important;
+    aspect-ratio: 1 / 1.02 !important;
+    padding: 9px !important;
+    margin: 0 auto !important;
+    border-radius: 26px !important;
+  }
+  .portrait-stage::before { border-radius: 27px !important; }
+  .portrait-stage::after { inset: 13px !important; border-radius: 20px !important; }
+  .portrait-frame { border-radius: 20px !important; }
+  .portrait-frame img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 37% !important;
+  }
+  .portrait-overlay {
+    inset: 9px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, transparent 70%, rgba(3,9,18,.78) 98%) !important;
+  }
+  .portrait-title {
+    left: 22px !important;
+    bottom: 20px !important;
+    max-width: calc(100% - 44px) !important;
+  }
+  .portrait-title span { font-size: .62rem !important; letter-spacing: .32em !important; }
+  .portrait-title strong {
+    font-size: clamp(1.75rem, 8.3vw, 2.35rem) !important;
+    line-height: .92 !important;
+    white-space: nowrap !important;
+  }
+  .floating-stat {
+    top: auto !important;
+    bottom: -76px !important;
+    width: calc(50% - 5px) !important;
+    min-width: 0 !important;
+    padding: 11px 10px !important;
+    border-radius: 14px !important;
+    animation: none !important;
+    transform: none !important;
+  }
+  .stat-one { left: 0 !important; right: auto !important; }
+  .stat-two { right: 0 !important; left: auto !important; }
+  .floating-stat strong { font-size: 1.18rem !important; line-height: 1.05 !important; }
+  .floating-stat span { font-size: .64rem !important; line-height: 1.3 !important; margin-top: 4px !important; }
+  .marquee { margin-top: 8px !important; }
+}
+EOF
+      - name: Bust browser cache
+        shell: bash
+        run: |
+          sed -i 's|href="styles.css[^\"]*"|href="styles.css?v=20260819-mobile-v2"|' index.html
+          sed -i 's|src="script.js[^\"]*"|src="script.js?v=20260819-mobile-v2"|' index.html
+      - name: Commit live fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add styles.css index.html
+          git commit -m 'Fix mobile hero card overlap and bust cache' || exit 0
+          git push origin main
