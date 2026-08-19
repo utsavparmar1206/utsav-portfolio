@@ -88,3 +88,5 @@ EOF
           git add styles.css index.html
           git commit -m 'Fix mobile hero card overlap and bust cache' || exit 0
           git push origin main
+
+# trigger: 2
