@@ -1,2 +1,18 @@
 @import url("styles-base-v20260819.css?v=20260819-2");
 @import url("mobile-v2.css?v=20260819-2");
+
+/* Keep portfolio job titles aligned with the current CV. */
+.film-timeline .role:nth-child(3) .role-card h3,
+.film-timeline .role:nth-child(4) .role-card h3 {
+  font-size: 0;
+}
+
+.film-timeline .role:nth-child(3) .role-card h3::after {
+  content: "Warehouse Operations Associate cum Shift Lead";
+  font-size: 1.48rem;
+}
+
+.film-timeline .role:nth-child(4) .role-card h3::after {
+  content: "Business Development Manager";
+  font-size: 1.48rem;
+}
