@@ -10,3 +10,6 @@
   color: var(--muted);
 }
 .role-highlights li + li { margin-top: .65rem; }
+
+.role-card h4 { position: relative; z-index: 2; margin: 20px 0 4px; font-size: 1.05rem; }
+.role-card .site-dates { margin: 0 0 8px; font-size: .9rem; }
