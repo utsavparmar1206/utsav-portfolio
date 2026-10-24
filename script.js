@@ -213,3 +213,41 @@ if (motionAllowed && finePointer) {
 
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
+
+
+// Download a PDF as a file even when the browser previews direct PDF links.
+document.querySelectorAll('a[download]').forEach(link => {
+  link.addEventListener('click', async event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (link.dataset.downloading === 'true') return;
+    const label = link.textContent;
+    link.dataset.downloading = 'true';
+    link.setAttribute('aria-busy', 'true');
+    link.textContent = 'Downloading CV…';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    try {
+      const response = await fetch(link.href, { signal: controller.signal });
+      if (!response.ok) throw new Error('CV download unavailable');
+      const pdf = await response.blob();
+      if (!pdf.size) throw new Error('Empty CV');
+      const objectUrl = URL.createObjectURL(new Blob([pdf], { type: 'application/octet-stream' }));
+      const downloadLink = document.createElement('a');
+      downloadLink.href = objectUrl;
+      downloadLink.download = link.getAttribute('download') || 'Utsavkumar_Parmar_CV.pdf';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+    } catch (error) {
+      // Keep the PDF accessible if this browser does not support file downloads.
+      window.location.assign(link.href);
+    } finally {
+      clearTimeout(timer);
+      delete link.dataset.downloading;
+      link.removeAttribute('aria-busy');
+      link.textContent = label;
+    }
+  });
+});
