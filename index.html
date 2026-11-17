@@ -10,8 +10,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261025-leadership">
-<style>.profile-summary{max-width:78ch}.profile-summary p{line-height:1.8;margin:1em 0}.profile-skills{margin:24px 0 42px;gap:10px;flex-wrap:wrap}.profile-skills span{white-space:normal}#profile-details h3{margin-top:28px}.role-date{overflow-wrap:anywhere}.recommendation-intro{max-width:72ch;line-height:1.8;margin-bottom:32px}.recommendation-focus{color:#8af6e3;font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}.recommendation-meta{font-size:.88rem;line-height:1.6;color:#b7c8d5}.recommendation-excerpt{margin:22px 0!important;padding:0!important;border:0!important}.recommendation-excerpt p{font-size:1.06rem;line-height:1.75;color:#f0f5fa}.recommendation-grid details{margin-top:22px}.recommendation-grid summary{cursor:pointer;color:#8af6e3;padding:8px 0}.recommendation-grid details blockquote{margin:18px 0 0;padding:0;border:0;line-height:1.8}.recommendation-source{margin-top:30px}</style>
+  <link rel="stylesheet" href="styles.css?v=20261117-layout">
+<style>.profile-summary{max-width:78ch}.profile-summary p{line-height:1.8;margin:1em 0}.profile-skills{margin:24px 0 42px;gap:10px;flex-wrap:wrap}.profile-skills span{white-space:normal}#profile-details h3{margin-top:28px}.role-date{overflow-wrap:anywhere}.recommendation-intro{max-width:72ch;line-height:1.8;margin-bottom:32px}.recommendation-focus{color:#8af6e3;font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}.recommendation-meta{font-size:.88rem;line-height:1.6;color:#b7c8d5}.recommendation-excerpt{margin:22px 0!important;padding:0!important;border:0!important}.recommendation-excerpt p{font-size:1.06rem;line-height:1.75;color:#f0f5fa}.recommendation-grid details{margin-top:22px}.recommendation-grid summary{cursor:pointer;color:#8af6e3;padding:8px 0}.recommendation-grid details blockquote{margin:18px 0 0;padding:0;border:0;line-height:1.8}.recommendation-source{margin-top:30px}
+/* Clear portrait, readable About and consistent education records. */
+.hero-portrait{flex-direction:column;align-items:center;gap:18px}
+.portrait-stats{width:min(500px,100%);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.portrait-stats .floating-stat{position:relative;inset:auto;min-width:0;transform:none;animation:none;padding:14px 16px}
+.portrait-stats .floating-stat strong{font-size:1.35rem}
+.portrait-stats .floating-stat span{line-height:1.5}
+#about h2{font-family:"Space Grotesk",Inter,sans-serif;font-size:clamp(2rem,3.4vw,3rem);line-height:1.15;letter-spacing:-.035em;max-width:24ch;margin:12px 0 36px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px 64px}
+.about-grid>div{min-width:0}
+.about-grid h3{font-size:1.13rem;margin:0 0 12px;color:#f7fbff}
+.about-grid p{max-width:60ch;line-height:1.85;color:var(--muted);margin:0 0 16px}
+.about-grid a,#proof .proof-intro a{color:var(--teal);text-decoration:underline;text-underline-offset:4px}
+#proof .proof-grid{grid-template-columns:1fr 1fr;align-items:start}
+#proof .proof-large{grid-row:auto}
+#proof .proof-card button{aspect-ratio:4/3}
+.education-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px;align-items:stretch}
+.education-entry{display:flex;flex-direction:column;min-width:0;padding:28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,rgba(21,44,70,.86),rgba(8,22,38,.94))}
+.education-entry .education-date{font-size:.9rem;font-weight:600;color:var(--teal);line-height:1.5;margin:0 0 16px;white-space:normal}
+.education-entry h3{font-family:"Space Grotesk",Inter,sans-serif;font-size:1.35rem;line-height:1.4;margin:0 0 8px}
+.education-entry p{font-size:.95rem;line-height:1.75;color:var(--muted);margin:0 0 16px}
+.education-entry .education-institution{color:#eef5ff}
+.education-entry .education-grade{margin:auto 0 0;padding-top:12px;color:var(--soft)}
+@media(max-width:840px){.about-grid,.education-row,#proof .proof-grid{grid-template-columns:1fr}.about-grid{gap:26px}.education-entry{padding:24px}.portrait-stats{width:min(500px,92%)}}
+@media(max-width:420px){.portrait-stats{grid-template-columns:1fr}.portrait-stats .floating-stat{padding:12px 16px}}
+</style>
 </head>
 <body>
   <div class="scroll-progress" id="scrollProgress"></div>
@@ -61,8 +86,11 @@
             <div class="portrait-frame"><img src="assets/profile-4k.avif?v=20260818-4k" alt="Professional portrait of Utsav Parmar"></div>
             <div class="portrait-overlay"></div>
             <div class="portrait-title"><span>UTSAV</span><strong>PARMAR</strong></div>
-            <div class="floating-stat stat-one"><strong>PG</strong><span>Inbound Operations · EMA5</span></div>
-            <div class="floating-stat stat-two"><strong>20–40</strong><span>associates coordinated per shift</span></div>
+
+          </div>
+          <div class="portrait-stats" aria-label="Current operations responsibilities">
+            <div class="floating-stat"><strong>PG duties</strong><span>Inbound Operations · EMA5</span></div>
+            <div class="floating-stat"><strong>20–40</strong><span>associates coordinated per shift</span></div>
           </div>
         </div>
       </div>
@@ -91,11 +119,12 @@
     </section>
 
 
-    <section class="scene work-sample" id="about"><div class="shell"><p class="eyebrow">About</p><h2>MBA Supply Chain Management</h2><div class="profile-summary"><p>I work in Inbound Operations at Amazon EMA5 in Kettering, where I perform Process Guide duties as part of my permanent Warehouse Operative role and help coordinate 20–40 associates per shift.</p>
-<p>I allocate work based on priorities and associate training, organise staggered breaks and coordinate labour share. I monitor productivity and quality, provide refresher guidance, escalate operational issues and give shift leadership hourly updates and end-of-shift handovers.</p>
-<p>Since 13 October 2026, I have maintained 50% staffing coverage during breaks through a fair daily rotating rota and provided refresher guidance to clarify processes and help reduce repeat errors. At handover, I prepare full pallets of processable stock, empty totes and reserve supplies, typically supporting 50–60 minutes of processing based on repeated observation. I also complete bin cleaning, 5S and housekeeping to support the next shift’s fast start.</p><p>Selected as a Launch Ambassador in November 2026, I gather and represent associate feedback during meetings and GEMBA walks, support feedback tools and clinics, and follow up with leadership while keeping colleagues informed and maintaining confidentiality. This is an additional responsibility alongside my Warehouse Operative role and Process Guide duties.</p>
-<p>At Amazon EDI4 Outbound, I received written positive quality feedback dated 4 March 2026 recognising 100% picking accuracy across 3,959 units with zero errors. At CN Foods, I coordinated 10+ operatives during peak-period shift lead cover. At Shekhawati Sales &amp; Transportation (August 2020–August 2023), I managed a four-person sales and service team; during 2021–2023, I increased revenue by 30% and managed 50+ accounts with 95% client retention.</p>
-<p>I hold an MBA in Supply Chain Management from the University of East London. My experience also includes inventory control, stock reconciliation and Excel reporting. I’m targeting Team Leader, Shift Supervisor and Warehouse Supervisor roles, and I’m open to relevant logistics and inventory opportunities.</p></div><p><strong>Top skills:</strong> Team Leadership • Warehouse Operations • Inventory Control • Warehouse Management Systems • KPI Reporting</p></div></section>
+    <section class="scene work-sample" id="about"><div class="shell"><p class="eyebrow">About</p><h2>Operations experience and approach.</h2><div class="about-grid">
+<div><h3>On the warehouse floor</h3><p>I’m a permanent Warehouse Operative in Amazon EMA5 Inbound, performing Process Guide duties since October 2026. I help coordinate 20–40 associates per shift, allocate work, organise fair break rotas and support labour sharing.</p><p>My approach combines practical associate support with productivity and quality monitoring, timely escalation and clear handovers. I use WMS, RF scanning and Excel reporting to support day-to-day operations.</p></div>
+<div><h3>A voice for associates</h3><p>Selected as a Launch Ambassador in November 2026, I gather colleagues’ feedback, represent their views during meetings and GEMBA walks, and follow up with leadership. I support feedback tools and clinics while keeping colleagues informed and maintaining confidentiality.</p><p>This is an additional responsibility alongside my Warehouse Operative role and Process Guide duties.</p></div>
+<div><h3>Supply chain and team experience</h3><p>I hold an MBA in Supply Chain Management from the University of East London. My background spans Amazon Outbound, retail inventory control, shift lead cover for 10+ operatives at CN Foods and management of a four-person sales and service team in India.</p><p><a href="#impact">Explore my achievements and operational improvements ↓</a></p></div>
+<div><h3>My next step</h3><p>I’m based in Kettering and open to UK relocation. I’m targeting Team Leader, Shift Supervisor and Warehouse Supervisor roles, alongside relevant logistics and inventory opportunities.</p><p><strong>Core strengths:</strong> team coordination, associate coaching, inventory control, safety, quality and KPI reporting.</p></div>
+</div></div></section>
 
     <section class="scene systems" id="systems">
       <div class="shell systems-grid">
@@ -126,7 +155,7 @@
         <div class="proof-grid">
           <article class="proof-card proof-large tilt-card"><button data-image="assets/amazon.jpg" data-alt="Amazon quality recognition showing 100% accuracy"><img src="assets/amazon.jpg" alt="Amazon quality recognition showing 100% accuracy"><span>OPEN PROOF ↗</span></button><div><small>AMAZON UK</small><h3>Quality achievement</h3><p>Written positive quality feedback dated 4 March 2026 at EDI4 Dunfermline Outbound: 100% accuracy across 3,959 units with zero errors.</p></div></article>
           <article class="proof-card tilt-card"><button data-image="assets/sainsburys.jpg" data-alt="Sainsbury's Own It recognition"><img src="assets/sainsburys.jpg" alt="Sainsbury's Own It recognition"><span>OPEN PROOF ↗</span></button><div><small>SAINSBURY'S</small><h3>“Own It” recognition</h3><p>Recognition for ownership, contribution and performance.</p></div></article>
-          <article class="proof-card tilt-card"><button data-image="assets/recommendations.jpg" data-alt="LinkedIn recommendations"><img src="assets/recommendations.jpg" alt="LinkedIn recommendations"><span>OPEN PROOF ↗</span></button><div><small>PROFESSIONAL RECOMMENDATIONS</small><h3>Manager & mentor endorsements</h3><p>Recommendations highlighting reliability, initiative, analytical thinking and problem solving.</p></div></article>
+          
         </div>
       </div>
     </section>
@@ -155,9 +184,11 @@
           <article class="credential tilt-card"><button data-image="assets/pm.jpg" data-alt="Project Management Foundations certificate"><img src="assets/pm.jpg" alt="Project Management Foundations certificate"></button><div><small>CERTIFICATE</small><h3>Project Management Foundations</h3><p>LinkedIn Learning · 2023</p></div></article>
           <article class="credential tilt-card"><button data-image="assets/food.jpg" data-alt="Highfield Level 2 Food Safety certificate"><img src="assets/food.jpg" alt="Highfield Level 2 Food Safety certificate"></button><div><small>QUALIFICATION</small><h3>Highfield Level 2 Award in Food Safety for Manufacturing (RQF)</h3><p>Highfield Qualification · Issued March 2024</p></div></article>
         </div>
-        <div class="education-row"><div><span>July 2017–July 2020</span><strong>Bachelor of Business Administration - BBA</strong><p>Studied business management, operations, marketing, finance and organisational behaviour. Developed analytical, communication and commercial skills.</p><small>Mewar University · Grade: 6.00 SGPA</small></div><div><span>July 2014–July 2017</span><strong>Diploma in Electrical Engineering</strong><p>Studied electrical systems and engineering fundamentals. Developed practical problem-solving skills and knowledge of equipment operation, maintenance and safety.</p><small>SunRise University Alwar · Grade: 63%</small></div></div>
-      </div>
-    </section>
+        <div class="education-row">
+<article class="education-entry"><p class="education-date">July 2017 – July 2020</p><h3>Bachelor of Business Administration</h3><p class="education-institution">Mewar University · India</p><p>Studied business management, operations, marketing, finance and organisational behaviour. Developed analytical, communication and commercial skills.</p><p class="education-grade">Grade: 6.00 SGPA</p></article>
+<article class="education-entry"><p class="education-date">July 2014 – July 2017</p><h3>Diploma in Electrical Engineering</h3><p class="education-institution">SunRise University Alwar · India</p><p>Studied electrical systems and engineering fundamentals. Developed practical problem-solving skills and knowledge of equipment operation, maintenance and safety.</p><p class="education-grade">Grade: 63%</p></article>
+</div>
+</div></section>
     <section class="scene work-sample" id="profile-details"><div class="shell"><p class="eyebrow">Skills &amp; development</p><h2>Skills</h2><div class="tags profile-skills"><span>Inventory Control</span><span>Warehouse Operations</span><span>Warehouse Management Systems</span><span>KPI Reporting</span><span>Team Leadership</span><span>Shift Supervision</span><span>People Management</span><span>Department Coordination</span><span>Workforce Development</span><span>Employee Training</span><span>Health &amp; Safety</span><span>Continuous Improvement</span><span>Escalations Management</span><span>Conflict Resolution</span><span>Coaching &amp; Mentoring</span><span>Workload Allocation</span><span>Performance Management</span><span>New Hire Training</span><span>Logistics Optimization</span><span>Data-driven Decision Making</span><span>Procurement &amp; Operations</span><span>Engineering Fundamentals</span><span>Problem Solving</span><span>Health &amp; Safety Awareness</span><span>Financial Analysis</span><span>Business Communications</span><span>Strategic Planning</span><span>Business Management</span><span>Inventory Planning</span><span>Logistics Management</span><span>Operations Management</span><span>Customer Relationship Management (CRM)</span><span>Business Development</span><span>Stakeholder Management</span><span>FIFO Stock Rotation</span><span>Operational Excellence</span><span>Stock Replenishment</span><span>Customer Service</span><span>Team Collaboration</span><span>Order Fulfilment</span><span>Continuous Process Improvement</span><span>Data Analysis (Advanced Excel &amp; Power BI)</span><span>Inventory Management</span><span>Supply Chain Management</span><span>Logistical Coordination</span></div><h3>Further certifications</h3><div class="sample-grid"><article class="sample-card"><h3>Digital Marketing Foundations</h3><p>LinkedIn · Issued May 2024</p></article><article class="sample-card"><h3>Learning Cloud Computing: Core Concepts</h3><p>LinkedIn · Issued November 2023</p></article><article class="sample-card"><h3>Value Chain Management Business Simulation ( The Fresh Connection )</h3><p>Inchainge · Issued April 2024</p></article><article class="sample-card"><h3>Diploma in Computer Application</h3><p>Ascent Computer Education · Issued June 2010</p></article><article class="sample-card"><h3>Advanced Diploma In Computer Application</h3><p>Ascent Computer Education · Issued July 2012</p></article><article class="sample-card"><h3>Specialisation in Autocad/Cam</h3><p>Ascent Computer Education · Issued July 2013</p></article></div><h3>Languages</h3><p>English — Full professional proficiency</p>
 <p>Gujarati — Native or bilingual proficiency</p>
 <p>Hindi — Full professional proficiency</p></div></section>
