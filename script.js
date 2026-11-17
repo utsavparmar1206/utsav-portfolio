@@ -187,3 +187,11 @@ const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
 
 
+
+// Long role histories remain accessible without dominating a phone screen.
+const roleDisclosureMedia = matchMedia('(max-width:700px)');
+const syncRoleDisclosures = () => document.querySelectorAll('.role-detail').forEach(detail => {
+  detail.open = !roleDisclosureMedia.matches;
+});
+syncRoleDisclosures();
+roleDisclosureMedia.addEventListener('change', syncRoleDisclosures);
