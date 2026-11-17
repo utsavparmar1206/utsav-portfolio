@@ -114,3 +114,15 @@ html{scroll-padding-top:100px}
   html{scroll-behavior:auto}
   .enhanced .scene.in-view{animation:none}
 }
+
+.toolkit-mobile{display:none}
+.proof-card img{object-fit:contain}
+@media(min-width:701px){
+.impact-heading h2,.experience-intro h2,.proof-intro h2,.credentials-intro h2,.systems-copy h2,.project-copy h2,.contact h2{max-width:19ch;font-size:clamp(2.2rem,4vw,3.8rem);line-height:1.08}
+}
+@media(max-width:700px){
+.systems-visual svg{display:none}
+.toolkit-mobile{display:grid;grid-template-columns:1fr;list-style:none;padding:20px;margin:0;gap:0;position:relative;z-index:2}
+.toolkit-mobile li{padding:12px 0;font-size:.95rem;line-height:1.6;border-bottom:1px solid var(--line);color:var(--text)}
+.toolkit-mobile li:last-child{border-bottom:0}
+}
